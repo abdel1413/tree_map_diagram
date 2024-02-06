@@ -1,0 +1,8 @@
+body {
+  text-align: center;
+}
+#canvas {
+  width: 900px;
+  height: 70vh;
+  border: 1px solid red;
+}
