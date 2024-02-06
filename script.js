@@ -12,6 +12,55 @@ const kickstarter =
 const req = new XMLHttpRequest();
 
 let canvas, category, description, names, childrenData;
+const backgroundColors = {
+  bleu: "blue",
+  green: "green",
+  yellow: "yellow",
+  yellowgreen: "yellowgreen",
+  pink: "pink",
+  orange: "orange",
+  coffee: "coffee",
+  carote: "carote",
+  magenta: "magenta",
+  gray: "gray",
+  lightblue: "lightblue",
+};
+
+const legend = d3.select("#legend");
+
+const legendFunction = () => {
+  //class="legend-item"
+  legend
+    .selectAll("rect")
+    .data(childrenData)
+    .enter()
+    .append("rect")
+    .attr("width", "20")
+    .attr("height", "20")
+    .attr("class", "legend-item")
+    .style("fill", (d, i) => {
+      console.log("sss", d, i);
+      return d.map((i) => {
+        if (i.category == "2600") {
+          return "bleu";
+        } else if (i.category == "Wii") {
+          return "green";
+        } else if (i.category == "NES") {
+          return "lightblue";
+        } else if (i.category == "GB") {
+          return "yellow";
+        } else if (i.category == "PS3") {
+          return "#D0B0A9";
+        } else if (i.category == "PS2") {
+          return "#D2D2D2";
+        } else if (i.category == "SNES") {
+          return "pink";
+        } else if (i.category == "GBA") {
+          return "magenta";
+        }
+      });
+    });
+};
 
 const drawDiagram = () => {
   canvas = d3.select("#canvas");
@@ -26,7 +75,6 @@ const drawDiagram = () => {
     .attr("height", "150")
     .style("border", "1px solid green")
     .attr("data-name", (d) => {
-      console.log(d);
       return d.map((i) => {
         return i.name;
       });
@@ -44,7 +92,6 @@ const drawDiagram = () => {
     .style("fill", (d) => {
       return d.map((i) => {
         category = i.category;
-
         if (category == "2600") {
           return "blue";
         } else if (category == "Wii") {
@@ -95,12 +142,13 @@ d3.json(videoGameData).then((data) => {
     return d.children;
   });
 
-  childrenData.map((d) => {
-    d.map((i) => console.log(i.category));
-  });
+  //   childrenData.map((d) => {
+  //     d.map((i) => console.log(i.category));
+  //   });
   // console.log("dhild", childrenData);
 
   drawDiagram();
+  legendFunction();
 });
 
 d3.json(movieData).then((data) => {});
