@@ -2,7 +2,21 @@ body {
   text-align: center;
 }
 #canvas {
-  width: 900px;
-  height: 70vh;
+  width: 1000px;
+  height: 600px;
   border: 1px solid red;
+}
+.tile > text {
+  border: #fff 2px solid;
+  margin: 0.5rem;
+}
+
+#legend {
+  border: solid 2px blue;
+  margin: 10px auto;
+}
+#tooltip {
+  width: 20px;
+  height: 200px;
+  position: absolute;
 }
