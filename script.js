@@ -30,59 +30,37 @@ const backgroundColors = {
 const legend = d3.select("#legend");
 const tooltip = d3.select("#tooltip");
 
-const legendFunction = (movies) => {
-  //class="legend-item"
-  const legendRec = legend
-    .selectAll("g")
-    .data(movies)
-    .enter()
-    .append("g")
-    .attr("transform", "translate(" + Math.round(500 / 3) + ",0)");
-  legendRec
-    .append("rect")
-    .attr("width", "20")
-    .attr("height", "20")
-    .attr("class", "legend-item")
-    .style("fill", (movies, i) => {
-      let category = movies.data.category;
-
-      if (category == "2600") {
-        return "bleu";
-      } else if (category == "Wii") {
-        return "green";
-      } else if (category == "NES") {
-        return "lightblue";
-      } else if (category == "GB") {
-        return "yellow";
-      } else if (category == "PS3") {
-        return "#D0B0A9";
-      } else if (category == "PS2") {
-        return "#D2D2D2";
-      } else if (category == "SNES") {
-        return "pink";
-      } else if (category == "GBA") {
-        return "magenta";
-      }
-    });
-
-  legendRec
-    .append("text")
-    .attr("x", "5")
-    .attr("y", "10")
-    .text((movies) => {
-      return movies.data.category;
-    });
-};
-
 const handleMouseOver = (e, movies) => {
-  // console.log("in", e, "d", movies);
+  //console.log("in", e, "d", movies);
   tooltip
     .transition()
+    .attr("top", e.pageX)
+    .attr("left", e.pageY)
     .style("visibility", "visible")
     .style("width", "200")
     .style("height", "200")
-    .style("background-color", "red");
+    .style("opacity", "0.9")
+    .style("background-color", "#000")
+    .attr("data-value", () => {
+      console.log("md", movies.data);
+      return movies.data.value;
+    })
+    .text(
+      `${movies.data.name}- ${movies.data.category} - ${movies.data.value} `
+    );
 };
+
+const handleMouseMove = (e, movies) => {
+  tooltip
+    .transition()
+    .attr("top", e.pageX)
+    .attr("left", e.pageY)
+    .style("opacity", "0.9")
+    .style("width", "auto")
+    .style("height", "auto")
+    .style("padding", "0.5rem");
+};
+
 const handleMouseOut = () => {
   tooltip.transition().style("visibility", "hidden").style("opacity", "0");
 };
@@ -213,78 +191,8 @@ const drawDiagram = () => {
       return movies.data.name;
     })
     .on("mouseover", handleMouseOver)
+    .on("mousemove", handleMouseMove)
     .on("mouseout", handleMouseOut);
-
-  //   legendFunction(movies);
-  //   //   canvas
-  //     .append("g")
-  //     .selectAll("rect")
-  //     .data(childrenData)
-  //     .enter()
-  //     .append("rect")
-  //     .attr("class", "tile")
-  //     .attr("width", "200")
-  //     .attr("height", "150")
-  //     .style("border", "1px solid green")
-  //     .attr("data-name", (d) => {
-  //       return d.map((i) => {
-  //         return i.name;
-  //       });
-  //     })
-  //     .attr("data-category", (d) => {
-  //       return d.map((i) => {
-  //         return i.category;
-  //       });
-  //     })
-  // .attr("data-value", (d) => {
-  //   return d.map((i) => {
-  //     return i.value;
-  //   });
-  // })
-  // .style("fill", (d) => {
-  //   return d.map((i) => {
-  //     category = i.category;
-  //     if (category == "2600") {
-  //       return "blue";
-  //     } else if (category == "Wii") {
-  //       return "green";
-  //     } else if (category == "NES") {
-  //       return "lightblue";
-  //     } else if (category == "GB") {
-  //       return "orange";
-  //     } else if (category == "DS") {
-  //       return "yellow";
-  //     } else if (category == "X360") {
-  //       return "yellowgreen";
-  //     } else if (category == "PS3") {
-  //       return "coffee";
-  //     } else if (category == "PS2") {
-  //       return "carotte";
-  //     } else if (category == "SNES") {
-  //       return "pink";
-  //     } else if (category == "GBA") {
-  //       return "magenta";
-  //     } else if (category == "PS4") {
-  //       return "gray";
-  //     } else if (category == "3DS") {
-  //       return "#ADE5A1";
-  //     } else if (category == "N64") {
-  //       return "#E992CE";
-  //     } else if (category == "PS") {
-  //       return "#D0B0A9";
-  //     } else if (category == "XB") {
-  //       return "#C9CA4E";
-  //     } else if (category == " PC") {
-  //       return "#D2D2D2";
-  //     } else if (category == "PSP") {
-  //       return "#F4C4DB";
-  //     } else {
-  //       return "red";
-  //     }
-  //   });
-  // });
-
-  //canvas.append("text");
 
   tooltip
     .style("visibility", "hidden")
