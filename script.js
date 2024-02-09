@@ -24,6 +24,7 @@ const backgroundColors = {
   magenta: "magenta",
   gray: "gray",
   lightblue: "lightblue",
+  lightgray: "lightgray",
 };
 
 const legend = d3.select("#legend");
@@ -36,7 +37,7 @@ const legendFunction = (movies) => {
     .data(movies)
     .enter()
     .append("g")
-    .attr("transform", "translate(0, 200)");
+    .attr("transform", "translate(" + Math.round(500 / 3) + ",0)");
   legendRec
     .append("rect")
     .attr("width", "20")
@@ -74,13 +75,13 @@ const legendFunction = (movies) => {
 };
 
 const handleMouseOver = (e, movies) => {
-  console.log("in", e, "d", movies);
+  // console.log("in", e, "d", movies);
   tooltip
     .transition()
     .style("visibility", "visible")
     .style("width", "200")
     .style("height", "200")
-    .style("background-color", "black");
+    .style("background-color", "red");
 };
 const handleMouseOut = () => {
   tooltip.transition().style("visibility", "hidden").style("opacity", "0");
@@ -202,13 +203,20 @@ const drawDiagram = () => {
     .attr("x", "10")
     .attr("y", "20")
     .text((movies) => {
+      let splittedText = movies.data.name.split(" ");
+
+      splittedText.map((tx) => {
+        //console.log("t", tx);
+        // gs.append("tspan").attr("x", "10").attr("y", "20");
+      });
+
       return movies.data.name;
     })
     .on("mouseover", handleMouseOver)
     .on("mouseout", handleMouseOut);
 
-  legendFunction(movies);
-  //   canvas
+  //   legendFunction(movies);
+  //   //   canvas
   //     .append("g")
   //     .selectAll("rect")
   //     .data(childrenData)
@@ -278,7 +286,10 @@ const drawDiagram = () => {
 
   //canvas.append("text");
 
-  tooltip.style("visibility", "hidden");
+  tooltip
+    .style("visibility", "hidden")
+    .style("position", "absolute")
+    .style("opactiy", "0");
 };
 
 d3.json(videoGameData).then((data) => {

@@ -6,6 +6,9 @@ body {
   height: 600px;
   border: 1px solid red;
 }
+.tile {
+  border: 1px solid white;
+}
 .tile > text {
   border: #fff 2px solid;
   margin: 0.5rem;
@@ -16,7 +19,6 @@ body {
   margin: 10px auto;
 }
 #tooltip {
-  width: 20px;
+  width: 200px;
   height: 200px;
-  position: absolute;
 }
