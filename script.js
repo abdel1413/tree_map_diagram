@@ -3,12 +3,6 @@
 const videoGameData =
   "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json";
 
-const movieData =
-  "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json";
-
-const kickstarter =
-  "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/kickstarter-funding-data.json";
-
 const req = new XMLHttpRequest();
 
 let canvas, category, description, names, childrenData;
@@ -31,33 +25,36 @@ const legend = d3.select("#legend");
 const tooltip = d3.select("#tooltip");
 
 const handleMouseOver = (e, movies) => {
-  console.log("in", e, "d", movies);
-
   tooltip
     .transition()
-    .attr("top", e.pageY + "px")
-    .attr("left", e.pageX + "px")
     .style("visibility", "visible")
-    .style("width", "200")
-    .style("height", "200")
+    .attr("top", e.offsetY + 10 + "px")
+    .attr("left", e.offSetX + 10 + "px")
     .style("opacity", "0.9")
     .style("border", "1px solid black")
-    .style("background-color", "gray")
-    .attr("data-value", movies.data.value)
+    .style("background-color", "lightgray")
+    .style("border-radius", "10px")
+    .style("padding", "10px")
+    .attr("data-value", (d) => {
+      return movies.value;
+    })
     .text(
-      `${movies.data.name}- ${movies.data.category} - ${movies.data.value} `
+      `${movies.data.name}- ${movies.data.category} - ${movies.data.value}`
     );
 };
 
 const handleMouseMove = (e, movies) => {
   tooltip
     .transition()
-    .attr("top", e.pageX)
-    .attr("left", e.pageY)
+    .attr("data-value", () => movies.data.value)
+    // .attr("top", e.offsetY + 10 + "px")
+    // .attr("left", e.offsetX + 10 + "px")
     .style("opacity", "0.9")
     .style("width", "auto")
     .style("height", "auto")
-    .style("padding", "0.5rem");
+    .style("padding", "10px")
+    .style("background-color", "lightgray")
+    .style("border-radius", "10px");
 };
 
 const handleMouseOut = () => {
@@ -98,15 +95,21 @@ const drawDiagram = () => {
     .append("g")
     .attr("transform", (movies) => {
       //return "translate(" + movies["x0"] + "," + movies["y0"] + ")";
+
       return `translate( ${movies["x0"]}, ${movies["y0"]})`;
     });
 
   cell
     .append("rect")
     .attr("width", (d) => {
-      return d.x1 - d.x0;
+      const rectWidth = d.x1 - d.x0;
+      return rectWidth;
     })
-    .attr("height", (d) => d.y1 - d.y0)
+    .attr("height", (d) => {
+      // d.y1 - d.y0
+      const rectHeight = d.y1 - d.y0;
+      return rectHeight;
+    })
     .style("border", "1px solid red")
     .attr("class", "tile")
     .style("border", "1px solid red ")
@@ -159,11 +162,12 @@ const drawDiagram = () => {
     })
     .attr("data-value", (movies) => {
       return movies.data.value;
-    });
+    })
+    .on("mouseover", handleMouseOver)
+    .on("mousemove", handleMouseMove)
+    .on("mouseout", handleMouseOut);
 
   //append text to g
-  const txt = movies.map((i) => i.data.name.split(" "));
-
   cell
     .append("text")
 
@@ -171,20 +175,15 @@ const drawDiagram = () => {
     .data((d) => d.data.name.split(" "))
     .enter()
     .append("tspan")
-    .attr("x", "5")
+    .attr("x", "4")
     .attr("padding", "10")
     //.attr("y", "1")
     .attr("y", (d, i) => {
-      console.log("id", i);
-      return 13 + i * 30;
+      return 15 + i * 15;
     })
-    .text((d) => {
-      //console.log("texxxxddd", d);
-      return d;
-    })
-    .on("mouseover", handleMouseOver)
-    .on("mousemove", handleMouseMove)
-    .on("mouseout", handleMouseOut);
+    .text((d) => d)
+    .style("font-size", "0.8rem")
+    .style("overflow", "hidden");
 
   tooltip
     .style("visibility", "hidden")
@@ -200,5 +199,3 @@ d3.json(videoGameData).then((data) => {
   drawDiagram();
   //legendFunction();
 });
-
-d3.json(movieData).then((data) => {});
