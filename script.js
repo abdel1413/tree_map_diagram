@@ -31,20 +31,19 @@ const legend = d3.select("#legend");
 const tooltip = d3.select("#tooltip");
 
 const handleMouseOver = (e, movies) => {
-  //console.log("in", e, "d", movies);
+  console.log("in", e, "d", movies);
+
   tooltip
     .transition()
-    .attr("top", e.pageX)
-    .attr("left", e.pageY)
+    .attr("top", e.pageY + "px")
+    .attr("left", e.pageX + "px")
     .style("visibility", "visible")
     .style("width", "200")
     .style("height", "200")
     .style("opacity", "0.9")
-    .style("background-color", "#000")
-    .attr("data-value", () => {
-      console.log("md", movies.data);
-      return movies.data.value;
-    })
+    .style("border", "1px solid black")
+    .style("background-color", "gray")
+    .attr("data-value", movies.data.value)
     .text(
       `${movies.data.name}- ${movies.data.category} - ${movies.data.value} `
     );
@@ -66,8 +65,10 @@ const handleMouseOut = () => {
 };
 
 const drawDiagram = () => {
+  const width = "1000";
+  const height = "600";
   canvas = d3.select("#canvas");
-
+  canvas.attr("width", width).attr("height", height);
   //create a hiearchy of childreen
   let hierarchy = d3
     .hierarchy(childrenData, (node) => {
@@ -82,7 +83,7 @@ const drawDiagram = () => {
   //   console.log("hie", hierarchy.leaves());
 
   //create a method then pass hierarchy in to create a tree map
-  let createTreeMap = d3.treemap().size([1000, 600]);
+  let createTreeMap = d3.treemap().size([width, height]).padding(1);
 
   createTreeMap(hierarchy);
 
@@ -90,37 +91,27 @@ const drawDiagram = () => {
   let movies = hierarchy.leaves();
   console.log("mo", movies);
 
-  let gs = canvas
+  let cell = canvas
     .selectAll("g")
     .data(movies)
     .enter()
     .append("g")
     .attr("transform", (movies) => {
-      return "translate(" + movies["x0"] + "," + movies["y0"] + ")";
+      //return "translate(" + movies["x0"] + "," + movies["y0"] + ")";
+      return `translate( ${movies["x0"]}, ${movies["y0"]})`;
     });
 
-  gs.append("rect")
+  cell
+    .append("rect")
+    .attr("width", (d) => {
+      return d.x1 - d.x0;
+    })
+    .attr("height", (d) => d.y1 - d.y0)
     .style("border", "1px solid red")
     .attr("class", "tile")
-    .style("border", "1px solid white")
+    .style("border", "1px solid red ")
     .style("fill", (d) => {
       let category = d.data.category;
-
-      //   if (category == "Action") {
-      //     return "orange";
-      //   } else if (category == "Drama") {
-      //     return "lightblue";
-      //   } else if (category == "Adventure") {
-      //     return "yellowgreen";
-      //   } else if (category == "Family") {
-      //     return "blue";
-      //   } else if (category == "Comedy") {
-      //     return "yellow";
-      //   } else if (category == "Biography") {
-      //     return "blue";
-      //   } else if (category == "Animation") {
-      //     return "green";
-      //   }
 
       if (category == "2600") {
         return "blue";
@@ -168,27 +159,28 @@ const drawDiagram = () => {
     })
     .attr("data-value", (movies) => {
       return movies.data.value;
-    })
-    .attr("width", (movies) => {
-      return movies.parent.x1 - movies.parent.x0;
-    })
-    .attr("height", (movies) => {
-      return movies.parent.y1 - movies.parent.y0;
     });
 
   //append text to g
-  gs.append("text")
-    .attr("x", "10")
-    .attr("y", "20")
-    .text((movies) => {
-      let splittedText = movies.data.name.split(" ");
+  const txt = movies.map((i) => i.data.name.split(" "));
 
-      splittedText.map((tx) => {
-        //console.log("t", tx);
-        // gs.append("tspan").attr("x", "10").attr("y", "20");
-      });
+  cell
+    .append("text")
 
-      return movies.data.name;
+    .selectAll("tspan")
+    .data((d) => d.data.name.split(" "))
+    .enter()
+    .append("tspan")
+    .attr("x", "5")
+    .attr("padding", "10")
+    //.attr("y", "1")
+    .attr("y", (d, i) => {
+      console.log("id", i);
+      return 13 + i * 30;
+    })
+    .text((d) => {
+      //console.log("texxxxddd", d);
+      return d;
     })
     .on("mouseover", handleMouseOver)
     .on("mousemove", handleMouseMove)
@@ -204,7 +196,6 @@ d3.json(videoGameData).then((data) => {
   names = data.name;
 
   childrenData = data;
-  console.log("d", childrenData);
 
   drawDiagram();
   //legendFunction();
