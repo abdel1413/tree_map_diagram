@@ -28,14 +28,17 @@ const legend = d3.select("#legend");
 const tooltip = d3.select("#tooltip");
 
 const handleMouseOver = (e, movies) => {
+  const [xcoord, ycoord] = d3.pointer(e);
+  console.log("xc", xcoord);
+  console.log("yc", ycoord);
   tooltip
     .transition()
     .style("visibility", "visible")
-    .attr("top", e.offsetY + 10 + "px")
-    .attr("left", e.offSetX + 10 + "px")
+    .attr("top", ycoord + 10 + "px")
+    .attr("left", xcoord + 10 + "px")
     .style("opacity", "0.9")
-    .style("border", "1px solid black")
-    .style("background-color", "lightgray")
+    .style("border", "1px solid rgba(250,250,205,0.2)")
+    .style("background-color", "rgba(255,255,255,0.9)")
     .style("border-radius", "10px")
     .style("padding", "10px")
     .attr("data-value", (d) => {
@@ -50,13 +53,13 @@ const handleMouseMove = (e, movies) => {
   tooltip
     .transition()
     .attr("data-value", () => movies.data.value)
-    // .attr("top", e.offsetY + 10 + "px")
-    // .attr("left", e.offsetX + 10 + "px")
+    .attr("top", e.pageY + 10 + "px")
+    .attr("left", e.pageX + 10 + "px")
     .style("opacity", "0.9")
     .style("width", "auto")
     .style("height", "auto")
     .style("padding", "10px")
-    .style("background-color", "lightgray")
+    .style("background-color", "rgba(245,230,245,0.5)")
     .style("border-radius", "10px");
 };
 
