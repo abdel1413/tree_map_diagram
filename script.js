@@ -7,18 +7,21 @@ const req = new XMLHttpRequest();
 
 let canvas, category, description, names, childrenData;
 const backgroundColors = {
-  bleu: "blue",
+  blue: "blue",
   green: "green",
   yellow: "yellow",
   yellowgreen: "yellowgreen",
   pink: "pink",
   orange: "orange",
   coffee: "coffee",
-  carote: "carote",
+  carol: "carol",
   magenta: "magenta",
   gray: "gray",
   lightblue: "lightblue",
   lightgray: "lightgray",
+  lightgreen: "lightgreen",
+  tan: "tan",
+  khaki: "khaki",
 };
 
 const legend = d3.select("#legend");
@@ -96,7 +99,7 @@ const drawDiagram = () => {
     .attr("transform", (movies) => {
       //return "translate(" + movies["x0"] + "," + movies["y0"] + ")";
 
-      return `translate( ${movies["x0"]}, ${movies["y0"]})`;
+      return `translate(${movies["x0"]}, ${movies["y0"]})`;
     });
 
   cell
@@ -117,28 +120,29 @@ const drawDiagram = () => {
       let category = d.data.category;
 
       if (category == "2600") {
-        return "blue";
+        return backgroundColors.blue;
       } else if (category == "Wii") {
-        return "lightgreen";
+        return backgroundColors.lightgreen;
       } else if (category == "NES") {
-        return "lightblue";
+        return backgroundColors.lightblue;
       } else if (category == "GB") {
-        return "orange";
+        return backgroundColors.orange;
       } else if (category == "DS") {
-        return "yellow";
+        return backgroundColors.yellow;
       } else if (category == "X360") {
-        return "yellowgreen";
+        return backgroundColors.yellowgreen;
       } else if (category == "PS3") {
-        return "tan";
+        return backgroundColors.tan;
       } else if (category == "PS2") {
-        return "khaki";
+        return backgroundColors.khaki;
       } else if (category == "SNES") {
-        return "pink";
+        return backgroundColors.pink;
       } else if (category == "GBA") {
-        return "magenta";
+        return backgroundColors.magenta;
       } else if (category == "PS4") {
-        return "gray";
+        return backgroundColors.gray;
       } else if (category == "3DS") {
+        // return backgroundColors.caro;
         return "#ADE5A1";
       } else if (category == "N64") {
         return "#E992CE";
@@ -151,6 +155,7 @@ const drawDiagram = () => {
       } else if (category == "PSP") {
         return "#F4C4DB";
       } else {
+        return backgroundColors.lightgray;
         return "lightgray";
       }
     })
